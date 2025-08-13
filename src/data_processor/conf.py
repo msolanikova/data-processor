@@ -3,3 +3,5 @@ from pydantic import Field
 
 class Conf(BaseSettings):
     customer: str = Field("default value")
+
+config = Conf()
