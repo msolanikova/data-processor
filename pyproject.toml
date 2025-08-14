@@ -13,8 +13,8 @@ dependencies = [
 ]
 
 [tool.poetry]
-name = "poetry-demo"
-version = "0.1.1"
+name = "data-processor"
+version = "0.1.0"
 packages = [{ include = "data_processor", from = "src" }]
 
 [tool.poetry.group.test.dependencies]
