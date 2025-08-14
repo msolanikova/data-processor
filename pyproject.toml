@@ -6,7 +6,7 @@ authors = [
     {name = "Marketa Solanikova",email = "solanikova@promark.sk"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "~=3.12"
 dependencies = [
     "boto3 (==1.40.8)",
     "pydantic-settings (==2.10.1)"
