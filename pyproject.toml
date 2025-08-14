@@ -14,10 +14,10 @@ dependencies = [
 
 [tool.poetry]
 name = "poetry-demo"
-version = "0.1.0"
+version = "0.1.1"
 packages = [{ include = "data_processor", from = "src" }]
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.group.test.dependencies]
 pytest = "8.4.1"
 
 
