@@ -1,7 +1,7 @@
 from data_processor.conf import config
 
 
-def lambda_handler(event):
+def lambda_handler(event, context):
     print(config.customer)
 
     param1 = event.get("parameter1")
