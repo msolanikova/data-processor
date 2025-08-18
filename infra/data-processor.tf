@@ -20,7 +20,7 @@ resource "aws_iam_policy" "data_processor_s3_permissions" {
         Effect = "Allow",
         Action = ["s3:ListBucket", "s3:GetObject",
         "s3:PutObject"],
-        Resource = ["arn:aws:s3:::${var.data_processor_artifact_bucket}", "arn:aws:s3:::${var.data_processor_artifact_bucket}/*"]
+        Resource = ["arn:aws:s3:::${var.artifact_bucket}", "arn:aws:s3:::${var.artifact_bucket}/*"]
       }
     ]
   })
