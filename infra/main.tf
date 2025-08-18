@@ -6,6 +6,14 @@ terraform {
     }
   }
 
+  backend "s3" {
+    bucket         = "data-processor-tf-state"
+    key            = "dev.tfstate" # or use ${terraform.workspace}
+    region         = "eu-central-1"
+    use_lockfile   = true
+    encrypt        = true
+  }
+
   required_version = ">= 1.2"
 }
 
