@@ -1,0 +1,38 @@
+version: 0.2
+
+env:
+  variables:
+    COMMIT_MESSAGE: ""
+    SKIP_MESSAGE_REGEX: "increase version"
+  git-credential-helper: yes
+
+phases:
+  build:
+    commands:
+       - echo $COMMIT_MESSAGE
+       - echo $PIPELINE_EXECUTION_ID
+       - echo $CODEBUILD_INITIATOR
+       - PIPELINE_NAME="${PIPELINE_NAME:-$(echo "$CODEBUILD_INITIATOR" | cut -d/ -f2)}"
+       - echo $PIPELINE_NAME
+
+       - SHOULD_SKIP=0
+
+       # Check if pipeline should be skipped
+       - |
+         if [[ -n "${SKIP_MESSAGE_REGEX:-}" ]] && echo "$COMMIT_MESSAGE" | grep -Eiq "$SKIP_MESSAGE_REGEX"; then
+           echo "Matched SKIP_MESSAGE_REGEX → will skip."
+           SHOULD_SKIP=1
+         fi
+
+       # Stop the pipeline if it should be skipped
+       - |
+         if [[ "$SHOULD_SKIP" -eq 1 ]]; then
+           echo "Stopping pipeline ${PIPELINE_NAME} execution ${PIPELINE_EXECUTION_ID}…"
+           aws codepipeline stop-pipeline-execution \
+             --pipeline-name "$PIPELINE_NAME" \
+             --pipeline-execution-id "$PIPELINE_EXECUTION_ID" \
+             --reason "Pre-check: skip by message" \
+             --abandon
+          # exit 0 so this action shows green while the pipeline is being stopped
+           exit 0
+         fi

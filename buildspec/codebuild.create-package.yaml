@@ -1,0 +1,49 @@
+version: 0.2
+
+env:
+  git-credential-helper: yes
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+  pre_build:
+    commands:
+      - git config --global user.email "codebuild@promark.sk"
+      - git config --global user.name "AWS CodeBuild"
+      - python -m pip install --upgrade pip
+      - pip install poetry
+      - poetry config virtualenvs.in-project true
+  build:
+    commands:
+      - echo "Install python dependencies"
+
+      # install dist dependencies
+      - poetry install --no-cache --only dist
+      - export CURRENT_VERSION=$(poetry version --short)
+
+      # create package
+      - cd src
+      - zip -r ../data-processor-${CURRENT_VERSION}.zip data_processor -x '**/__pycache__/*'
+      - cd ../.venv/lib/python3.12/site-packages
+      - zip -r9 ../../../../data-processor-${CURRENT_VERSION}.zip . -x '**/__pycache__/*'
+      - cd $CODEBUILD_SRC_DIR
+
+      # mark current commit with version
+      - git tag $CURRENT_VERSION
+      - git push origin $CURRENT_VERSION
+
+      # increase project version
+      - poetry version patch
+      - git checkout main
+      - git add pyproject.toml
+      - git commit -m "increase version"
+      - git push origin HEAD:main
+
+  post_build:
+    commands:
+      - aws s3 cp "data-processor-${CURRENT_VERSION}.zip" "s3://data-processor-artifacts/data-processor-${CURRENT_VERSION}.zip"
+      - |
+        aws codepipeline start-pipeline-execution --name data-processor-deployment \
+        --variables name=DATA_PROCESSOR_VERSION,value="$CURRENT_VERSION"
+

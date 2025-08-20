@@ -1,0 +1,50 @@
+version: 0.2
+
+env:
+  variables:
+    DATA_PROCESSOR_VERSION: ""
+    OTHER_SERVICE_VERSION: ""
+    VERSIONS_FILE: "dev_versions"
+
+phases:
+  install:
+    commands:
+      # install terraform binary
+      #- curl -s -qL -o terraform_install.zip https://releases.hashicorp.com/terraform/0.11.13/terraform_0.11.13_linux_amd64.zip
+      #- unzip terraform_install.zip -d /usr/bin/
+      #- chmod +x /usr/bin/terraform
+      - sudo yum install -y yum-utils shadow-utils
+      - sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - sudo yum -y install terraform
+
+    finally:
+      - terraform --version
+  build:
+    commands:
+       # update versions in versions file
+       - cd infra
+       - aws s3api get-object --bucket data-processor-artifacts --key $VERSIONS_FILE $VERSIONS_FILE
+       - |
+         if [[ -n "$DATA_PROCESSOR_VERSION" && "$DATA_PROCESSOR_VERSION" != "NO_CHANGE" ]]; then
+           tmp="$(mktemp)"
+           sed -E "s/^([[:space:]]*data_processor_version[[:space:]]*=[[:space:]]*).*/\1\"${DATA_PROCESSOR_VERSION}\"/i" "$VERSIONS_FILE" > "$tmp"
+           mv "$tmp" "$VERSIONS_FILE"
+           echo "Updated DATA_PROCESSOR_VERSION to '$DATA_PROCESSOR_VERSION' in $VERSIONS_FILE"
+         fi
+       - |
+         if [[ -n "$OTHER_SERVICE_VERSION" && "$OTHER_SERVICE_VERSION" != "NO_CHANGE" ]]; then
+           tmp="$(mktemp)"
+           sed -E "s/^([[:space:]]*other_service_version[[:space:]]*=[[:space:]]*).*/\1\"${OTHER_SERVICE_VERSION}\"/i" "$VERSIONS_FILE" > "$tmp"
+           mv "$tmp" "$VERSIONS_FILE"
+           echo "Updated OTHER_SERVICE_VERSION to '$OTHER_SERVICE_VERSION' in $VERSIONS_FILE"
+         fi
+       - aws s3api put-object --bucket data-processor-artifacts --key $VERSIONS_FILE --body $VERSIONS_FILE
+
+       # create .tfvars file
+       - cp $VERSIONS_FILE terraform.tfvars
+       - cat terraform.tfvars
+
+       # deploy terraform
+       - terraform init
+       - terraform plan --var-file=terraform.tfvars -out=tfplan
+       - terraform apply "tfplan"

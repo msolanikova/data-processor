@@ -1,0 +1,15 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+  build:
+    commands:
+      - echo "Install python dependencies"
+      - python -m pip install --upgrade pip
+      - pip install poetry
+      - poetry config virtualenvs.in-project true
+      - poetry install --no-cache --with test
+      - source .venv/bin/activate
+      - pytest
