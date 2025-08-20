@@ -10,6 +10,9 @@ def lambda_handler(event, context):
     param2 = event.get("parameter2")
     print(param2)
 
+    param3 = event.get("parameter3")
+    print(param3)
+
 
     if event.get("parameter1") == "exc":
         raise Exception(f"parameter1 has wrong value: {event.get("parameter1")}")
