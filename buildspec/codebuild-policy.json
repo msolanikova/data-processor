@@ -1,0 +1,82 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:logs:eu-central-1:100350978953:log-group:/aws/codebuild/data-processor*",
+        "arn:aws:logs:eu-central-1:100350978953:log-group:/aws/codebuild/data-processor*:*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:s3:::codepipeline*",
+        "arn:aws:s3:::codepipeline*/*",
+        "arn:aws:s3:::data-processor-artifacts",
+        "arn:aws:s3:::data-processor-artifacts/*"
+      ],
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:GetBucketAcl",
+        "s3:GetBucketLocation"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "codebuild:CreateReportGroup",
+        "codebuild:CreateReport",
+        "codebuild:UpdateReport",
+        "codebuild:BatchPutTestCases",
+        "codebuild:BatchPutCodeCoverages"
+      ],
+      "Resource": [
+        "arn:aws:codebuild:eu-central-1:100350978953:report-group/data-processor*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "codepipeline:StopPipelineExecution",
+        "codepipeline:StartPipelineExecution"
+      ],
+      "Resource": [
+        "arn:aws:codepipeline:eu-central-1:100350978953:data-processor*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "codeconnections:RegisterAppCode",
+        "codeconnections:CreateConnection",
+        "codeconnections:StartOAuthHandshake",
+        "codeconnections:ListSyncConfigurations",
+        "codeconnections:UpdateSyncConfiguration",
+        "codeconnections:GetSyncConfiguration",
+        "codeconnections:UpdateSyncBlocker",
+        "codeconnections:DeleteSyncConfiguration",
+        "codeconnections:GetInstallationUrl",
+        "codeconnections:GetSyncBlockerSummary",
+        "codeconnections:CreateHost",
+        "codeconnections:ListRepositoryLinks",
+        "codeconnections:GetResourceSyncStatus",
+        "codeconnections:ListRepositorySyncDefinitions",
+        "codeconnections:GetIndividualAccessToken",
+        "codeconnections:StartAppRegistrationHandshake",
+        "codeconnections:ListHosts",
+        "codeconnections:ListInstallationTargets",
+        "codeconnections:UseConnection",
+        "codestar-connections:UseConnection"
+      ],
+      "Resource": "arn:aws:codeconnections:eu-central-1:100350978953:connection/*"
+    }
+  ]
+}

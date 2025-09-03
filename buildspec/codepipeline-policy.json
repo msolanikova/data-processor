@@ -1,0 +1,88 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "codeconnections:RegisterAppCode",
+        "codeconnections:CreateConnection",
+        "codeconnections:StartOAuthHandshake",
+        "codeconnections:ListSyncConfigurations",
+        "codeconnections:UpdateSyncConfiguration",
+        "codeconnections:GetSyncConfiguration",
+        "codeconnections:UpdateSyncBlocker",
+        "codeconnections:DeleteSyncConfiguration",
+        "codeconnections:GetInstallationUrl",
+        "codeconnections:GetSyncBlockerSummary",
+        "codeconnections:CreateHost",
+        "codeconnections:ListRepositoryLinks",
+        "codeconnections:GetResourceSyncStatus",
+        "codeconnections:ListRepositorySyncDefinitions",
+        "codeconnections:GetIndividualAccessToken",
+        "codeconnections:StartAppRegistrationHandshake",
+        "codeconnections:ListHosts",
+        "codeconnections:ListInstallationTargets",
+        "codeconnections:UseConnection",
+        "codestar-connections:UseConnection"
+      ],
+      "Resource": "arn:aws:codeconnections:eu-central-1:100350978953:connection/*"
+    },
+    {
+      "Action": [
+        "inspector-scan:ScanSbom"
+      ],
+      "Resource": "*",
+      "Effect": "Allow"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObjectVersionTagging",
+        "s3:PutObjectLegalHold",
+        "s3:GetObject*",
+        "s3:PutObject",
+        "s3:Abort*",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:GetBucket*",
+        "s3:DeleteObject*",
+        "s3:List*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::codepipelinestartertempla-codepipelineartifactsbuc-ezylp8cpsjok",
+        "arn:aws:s3:::codepipelinestartertempla-codepipelineartifactsbuc-ezylp8cpsjok/*",
+        "arn:aws:s3:::codepipeline-eu-central-1*",
+        "arn:aws:s3:::codepipeline-eu-central-1*/*",
+        "arn:aws:s3:::data-processor-artifacts",
+        "arn:aws:s3:::data-processor-artifacts/*"
+      ]
+    },
+    {
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": [
+        "arn:aws:logs:eu-central-1:100350978953:log-group:/aws/codepipeline/data-processor*",
+        "arn:aws:logs:eu-central-1:100350978953:log-group:/aws/codepipeline/data-processor*:*"
+      ],
+      "Effect": "Allow"
+    },
+    {
+      "Action": "sts:AssumeRole",
+      "Resource": [
+        "arn:aws:iam::100350978953:role/CodePipelineStarterTempla-CodeConnectionsActionRole-3LlJcjtEAdsi",
+        "arn:aws:iam::100350978953:role/data-processor-codebuild-role"
+      ],
+      "Effect": "Allow"
+    },
+    {
+      "Action": "codebuild:*",
+      "Resource": [
+        "arn:aws:codebuild:eu-central-1:100350978953:project/data-processor*"
+      ],
+      "Effect": "Allow"
+    }
+  ]
+}
