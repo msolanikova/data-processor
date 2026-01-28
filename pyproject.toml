@@ -1,6 +1,6 @@
 [project]
 name = "data-processor"
-version = "5.0.3"
+version = "5.0.4"
 description = ""
 authors = [
     {name = "Marketa Solanikova",email = "solanikova@promark.sk"}
@@ -14,7 +14,7 @@ dependencies = [
 
 [tool.poetry]
 name = "data-processor"
-version = "5.0.3"
+version = "5.0.4"
 packages = [{ include = "data_processor", from = "src" }]
 
 [tool.poetry.group.test.dependencies]
